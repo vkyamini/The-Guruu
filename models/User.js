@@ -1,46 +1,4 @@
 const { Schema, model } = require('mongoose')
-// const offerSchema = require('./Offer')
-
-// const skillsSchema = new Schema({
-//     skillsId:{
-//         type: Schema.Types.ObjectId,
-//         default: () => new Types.ObjectId()
-//     },
-//     knownskills:{
-//         type: String,
-//             required: true,
-//             minlength: 1,
-//             maxLength: 280
-//     }
-// },
-// {
-//     toJSON: {
-//         virtuals: true,
-//         getters: true
-//     },
-//     id: false
-// })
-
-// const unknownskillsSchema = new Schema({
-//     unknownskillsId:{
-//         type: Schema.Types.ObjectId,
-//         default: () => new Types.ObjectId()
-//     },
-//     unknownskills:{
-//         type: String,
-//             required: true,
-//             minlength: 1,
-//             maxLength: 280
-//     }
-
-// },
-// {
-//     toJSON: {
-//         virtuals: true,
-//         getters: true
-//     },
-//     id: false
-// })
 
 const UserSchema = new Schema(
     {
@@ -56,24 +14,22 @@ const UserSchema = new Schema(
             unique: true,
             match: [/.+\@.+\..+/]
         },
-        password:{
-            type: String,
-            required: true,
-        },
-        github: {
-            type: String,
-            required: true,
-            max_length: 50,
-          },
-       linkedin: {
-            type: String,
-            required: true,
-            max_length: 50,
-          },
+        skillsKnown:[{ }],
 
-        // skillsknown: [skillsSchema],
-        // skillsUnknown: [unknownskillsSchema],
-        // offers: [offerSchema]
+        skillsUnknown:[{ }],
+
+        offers: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Offer'
+            }
+        ],
+        friends: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'User'
+            }
+        ]
     },
     {
         toJSON: {
@@ -83,13 +39,15 @@ const UserSchema = new Schema(
     }
 )
 
+UserSchema.virtual('friendCount').get(function() {
+    return this.friends.length
+});
 // UserSchema.virtual('skillsknown').get(function() {
 //     return this.skillsknown.length
 // });
-// UserSchema.virtual('skillsUnknown').get(function() {
-//     return this.skillsUnknown.length
+// UserSchema.virtual('skillsunknown').get(function() {
+//     return this.skillsunknown.length
 // });
-
 
 const User = model('User', UserSchema)
 

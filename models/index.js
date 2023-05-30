@@ -1,3 +1,4 @@
 const User =require('./User')
+const Offer = require('./offers')
 
-module.exports = {User};
+module.exports = {User , Offer};
