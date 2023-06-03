@@ -13,11 +13,10 @@ const offerSchema = new Schema(
             default: Date.now,
            
         },
-        username: {
+        senderId: {
             type: String,
             required: true
         },
-      
     },
     {
         toJSON: {

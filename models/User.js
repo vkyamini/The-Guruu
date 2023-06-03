@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose')
+const bcrypt = require("bcrypt")
 
 const UserSchema = new Schema(
     {
@@ -11,8 +12,20 @@ const UserSchema = new Schema(
         email: {
             type: String,
             required: true,
-            unique: true,
             match: [/.+\@.+\..+/]
+        },
+        password:{
+            type: String,
+            required: true,
+        },
+
+        aboutme:{
+          type: String,
+          trim: true
+        },
+
+        profilepic:{
+          type:String
         },
         skillsKnown:[{ }],
 
@@ -42,12 +55,36 @@ const UserSchema = new Schema(
 UserSchema.virtual('friendCount').get(function() {
     return this.friends.length
 });
-// UserSchema.virtual('skillsknown').get(function() {
-//     return this.skillsknown.length
-// });
-// UserSchema.virtual('skillsunknown').get(function() {
-//     return this.skillsunknown.length
-// });
+
+UserSchema.pre("save", function (next) {
+    const user = this
+  
+    if (this.isModified("password") || this.isNew) {
+      bcrypt.genSalt(10, function (saltError, salt) {
+        if (saltError) {
+          return next(saltError)
+        } else {
+          bcrypt.hash(user.password, salt, function(hashError, hash) {
+            if (hashError) {
+              return next(hashError)
+            }
+  
+            user.password = hash
+            next()
+          })
+        }
+      })
+    } else {
+      return next()
+    }
+  })
+
+UserSchema.virtual('knownskill').get(function() {
+    return this.skillsKnown.length
+});
+UserSchema.virtual('unknownskills').get(function() {
+    return this.skillsUnknown.length
+});
 
 const User = model('User', UserSchema)
 

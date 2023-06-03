@@ -1,14 +1,17 @@
 // EXPRESS 
 const express = require('express')
 const app = express()
+const cors = require("cors");
 const PORT = process.env.PORT || 3001
 app.use(express.json())
+app.use(cors());
 app.use(express.urlencoded({ extended: true }))
+const uri = process.env.MONGODB_URI;
 
 // MONGOOSE 
 const mongoose = require('mongoose')
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/The-Guruu', {
+mongoose.connect( uri || 'mongodb://localhost/Guruu_db', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })

@@ -4,7 +4,7 @@ const thought200Message = (id) => `Thought with ID: ${id} has been deleted!`
 const reaction200Message = (id) => `Reaction with ID: ${id} has been deleted!`
 
 const offerController = {
-    // get all thoughts 
+    // get all offers 
     getAllOffers(req, res) {
         Offer.find({})
         .select('-__v')
@@ -23,22 +23,24 @@ const offerController = {
         .catch(err => {
             console.log(err)
             
-            res.status(404).json(err)})
+            res.status(500).json(err)})
     },
 
     // add a thought
     createOffers(req, res) {
         Offer.create(req.body)
-        .then(({_id}) => User.findOneAndUpdate({ _id: body.userId}, { $push: { offers: _id } }, { new: true }))
+        .then(({_id}) => User.findOneAndUpdate({ _id: req.body.userId}, { $push: { offers: _id } }, { new: true }))
         .then(dbThoughtData => res.json(dbThoughtData))
-        .catch(err => res.status(400).json(err))
+        .catch(err => 
+            { console.log(err)
+                res.status(500).json(err)})
     },
 
     // update thought info 
     updateOffers({ params, body }, res) {
        Offer.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
         .then(dbThoughtData =>  dbThoughtData ? res.json(dbThoughtData) : res.status(404).json({ message: thought404Message(params.id) }))
-        .catch(err => res.status(400).json(err))
+        .catch(err => res.status(500).json(err))
     },
 
     // delete thought 
