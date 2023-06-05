@@ -1,34 +1,31 @@
-const { Schema, model } = require('mongoose')
+const { Schema, model } = require("mongoose");
 
 const offerSchema = new Schema(
-    {
-      Text: {
-            type: String,
-            required: true,
-            minlength: 1,
-            maxLength: 280
-        },
-        createdAt: {
-            type: Date,
-            default: Date.now,
-           
-        },
-        senderId: {
-            type: String,
-            required: true
-        },
+  {
+    Text: {
+      type: String,
+      required: true,
+      minlength: 1,
+      maxLength: 280,
     },
-    {
-        toJSON: {
-            virtuals: true,
-            getters: true 
-        },
-        id: false
-    }
-)
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+    senderId: {
+      type: String,
+      required: true,
+    },
+  },
+  {
+    toJSON: {
+      virtuals: true,
+      getters: true,
+    },
+    id: false,
+  }
+);
 
+const Offer = model("Offer", offerSchema);
 
-
-const Offer = model('Offer', offerSchema)
-
-module.exports = Offer
+module.exports = Offer;
