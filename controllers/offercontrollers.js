@@ -76,6 +76,24 @@ const offerController = {
       });
   },
 
+  // getOffersByUser
+  getOffersByUser(req, res) {
+    // find all offers with userId
+    // populate those offers with user details
+    Offer.find({ userId: req.params.userId })
+      .populate({ path: "senderId" })
+      // BONUS: figure out how to only return user name and profle picture
+      .then((offerData) => {
+        offerData
+          ? res.json(offerData)
+          : res.status(404).json({ message: user404Message(req.id) });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+  },
+
   // add a reaction to thought
   createReaction({ params, body }, res) {
     Offer.findOneAndUpdate(
