@@ -6,17 +6,20 @@ const {
   updateOffers,
   deleteOffers,
   getOffersByUser,
-  createReaction,
-  removeReaction,
+  showOffersByUser,
+  //createStatus,
+  // removeReaction,
 } = require("../../controllers/offercontrollers");
 
 router.route("/").get(getAllOffers).post(createOffers);
 
 router.route("/:id").get(getOffersById).put(updateOffers).delete(deleteOffers);
 
-router.route("/user/:userId").get(getOffersByUser);
+router.route("/user/:userId").get(getOffersByUser).get(showOffersByUser);
+router.route("/oneuser/:senderId").get(showOffersByUser);
 
-// router.route("/:OffersId/reactions").post(createReaction);
+//api/offers//:OffersId/reactions
+//router.route("/:OffersId/status").put(createStatus);
 
 // router.route("/:OffersId/reactions/:reactionId").delete(removeReaction);
 
