@@ -57,6 +57,10 @@ const userController = {
       });
   },
 
+
+  // find users by location ------------------------------------------ TooDoo
+
+
   //creating user (api/user/)
   createUser(req, res) {
     User.create(req.body)
@@ -91,6 +95,7 @@ const userController = {
   // get one user by ID
   getUserById(req, res) {
     const token = req.headers.authorization?.split(" ")[1];
+    console.log(token);
     const data = jwt.verify(token, process.env.JWT_SECRET);
 
     if (data.userId !== req.params.id) {
@@ -101,6 +106,7 @@ const userController = {
     User.findOne({ _id: req.params.id })
       .populate({ path: "friends", select: "-__v" })
       .populate({ path: "offers", select: "-__v" })
+     
       .select("-__v")
       .then((dbUserData) => {
         const isUser = data.userId === req.params.id;
@@ -111,8 +117,10 @@ const userController = {
           aboutme: dbUserData.aboutme,
           skillsKnown: dbUserData.skillsKnown,
           skillsUnknown: dbUserData.skillsUnknown,
+          Github:dbUserData.Github,
+          LinkedIn:dbUserData.LinkedIn,
           isUser: isUser,
-        };
+         };
 
         if (isUser) {
           // add offers
@@ -129,10 +137,12 @@ const userController = {
       });
   },
 
+  
+
   // update user info
   updateUser(req, res) {
     const token = req.headers.authorization?.split(" ")[1];
-    try {
+    console.log(req.headers);
       const data = jwt.verify(token, process.env.JWT_SECRET);
       if (data.userId !== req.params.id) {
         return res.status(403).json({ message: "wrong jwt" });
@@ -147,10 +157,6 @@ const userController = {
             : res.status(404).json({ message: user404Message(params.id) })
         )
         .catch((err) => res.status(400).json(err));
-    } catch (err) {
-      console.log(err);
-      res.status(404).json(err);
-    }
   },
 
   // delete user

@@ -38,17 +38,20 @@ const offerController = {
         User.findOneAndUpdate(
           { _id: req.body.userId },
           { $push: { offers: _id } },
+          { $push: {  } },
           { new: true }
         )
       )
-      .then((dbThoughtData) => res.json(dbThoughtData))
+      .then((dbThoughtData) =>
+      
+      res.json(dbThoughtData))
       .catch((err) => {
         console.log(err);
         res.status(500).json(err);
       });
   },
 
-  // update thought info
+  // update offer status info
   updateOffers({ params, body }, res) {
     Offer.findOneAndUpdate({ _id: params.id }, body, {
       new: true,
@@ -84,6 +87,7 @@ const offerController = {
       .populate({ path: "senderId" })
       // BONUS: figure out how to only return user name and profle picture
       .then((offerData) => {
+        console.log("i am the senderID data" , offerData)
         offerData
           ? res.json(offerData)
           : res.status(404).json({ message: user404Message(req.id) });
@@ -93,28 +97,37 @@ const offerController = {
         res.status(500).json(err);
       });
   },
+ 
 
-  // add a reaction to thought
-  createReaction({ params, body }, res) {
-    Offer.findOneAndUpdate(
-      { _id: params.thoughtId },
-      {
-        $push: {
-          reactions: {
-            reactionBody: body.reactionBody,
-            username: body.username,
-          },
-        },
-      },
-      { new: true, runValidators: true }
-    )
-      .then((dbThoughtData) =>
-        dbThoughtData
-          ? res.json(dbThoughtData)
-          : res.status(404).json({ message: thought404Message(params.id) })
-      )
-      .catch((err) => res.status(400).json(err));
+// getting all the offers made by the sender --------------------
+
+   showOffersByUser(req,res){
+       Offer.find({senderId: req.params.senderId})
+         .then((foundoffers)=>{
+          foundoffers
+          ? res.json(foundoffers)
+          : res.status(404).json({ message: user404Message(req.id) });
+          // console.log(foundoffers)
+       })
+       .catch((err)=>{
+          console.log(err)
+        })
+ 
   },
+
+  //add a reaction to thought
+  // createStatus(req, res) {
+  //   Offer.findOneAndUpdate({ _id: req.params.id }, req.body, {
+  //     new: true,
+  //     runValidators: true,
+  //   })
+  //     .then((dbThoughtData) =>
+  //       dbThoughtData
+  //         ? res.json(dbThoughtData)
+  //         : res.status(404).json({ message: thought404Message(params.id) })
+  //     )
+  //     .catch((err) => res.status(500).json(err));
+  // },
 
   // remove a reaction from thought
   removeReaction({ params }, res) {
