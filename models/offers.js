@@ -24,7 +24,12 @@ const offerSchema = new Schema(
       type: String,
       required: true,
     },
-  },
+   status:{
+     type:String,
+     enum: ['accepted', 'rejected', 'pending'],
+     default:"pending"
+   },
+},
   {
     toJSON: {
       virtuals: true,

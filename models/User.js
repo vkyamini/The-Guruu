@@ -27,6 +27,14 @@ const UserSchema = new Schema(
     profilepic: {
       type: String,
     },
+
+    Github:{
+      type: String,
+    },
+
+    LinkedIn:{
+      type: String,
+    },
     skillsKnown: [{}],
 
     skillsUnknown: [{}],
