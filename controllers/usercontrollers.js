@@ -57,9 +57,50 @@ const userController = {
       });
   },
 
+  userunknownFilter(req, res) {
+    const skill = req.params.skill;
+    console.log("i am the entred unknownskill", skill);
+    User.aggregate([{ $match: { skillsUnknown: skill } }])
+      .then((userfound) => {
+        console.log("i am the found users with unknown skills", userfound);
+        res.json(userfound);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({ msg: "an error", err });
+      });
+  },
 
-  // find users by location ------------------------------------------ TooDoo
+  // find users by location  ------------------------------------------ TooDoo
+  locationuserfilter(req, res) {
+    const location = req.params.location;
+    console.log("i am the entred unknownskill", location);
+    User.aggregate([{ $match: { Location: location } }])
+      .then((userfound) => {
+        console.log(userfound);
+        res.json(userfound);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({ msg: "an error", err });
+      });
+  },
+  // find users by location amd skill ------------------------------------------ TooDoo
+  locationskillFilter(req,res){
+    const location = req.params.location;
+    const skill = req.params.skill;
+    console.log("i am location and skill" ,location ,skill)
+    User.find( { $and: [ { Location: { $eq: location } }, { skillsKnown: { $eq: skill } } ] } )
+    .then((founduser)=>{
+      console.log(founduser)
+      res.json(founduser);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ msg: "an error", err });
+    });
 
+  },
 
   //creating user (api/user/)
   createUser(req, res) {
@@ -95,7 +136,7 @@ const userController = {
   // get one user by ID
   getUserById(req, res) {
     const token = req.headers.authorization?.split(" ")[1];
-    console.log(token);
+
     const data = jwt.verify(token, process.env.JWT_SECRET);
 
     if (data.userId !== req.params.id) {
@@ -119,6 +160,7 @@ const userController = {
           skillsUnknown: dbUserData.skillsUnknown,
           Github:dbUserData.Github,
           LinkedIn:dbUserData.LinkedIn,
+          Location:dbUserData.Location,
           isUser: isUser,
          };
 
