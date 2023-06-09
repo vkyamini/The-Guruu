@@ -24,6 +24,10 @@ const offerSchema = new Schema(
       type: String,
       required: true,
     },
+    Reply: {
+      type: String,
+      default:"Typing........"
+    },
    status:{
      type:String,
      enum: ['accepted', 'rejected', 'pending'],
