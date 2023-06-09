@@ -18,6 +18,9 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
+    Location:{
+      type:String,
+    },
 
     aboutme: {
       type: String,
@@ -60,8 +63,8 @@ const UserSchema = new Schema(
   }
 );
 
-UserSchema.virtual("friendCount").get(function () {
-  return this.friends.length;
+UserSchema.virtual("offerCount").get(function () {
+  return this.offers.length;
 });
 
 UserSchema.pre("save", function (next) {
