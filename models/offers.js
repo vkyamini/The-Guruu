@@ -1,9 +1,5 @@
 const { Schema, model } = require("mongoose");
 
-// add status to an offer
-// 1. "Accepted"
-// 2. "Rejected"
-// 3. "In-Progress"
 const offerSchema = new Schema(
   {
     Text: {
@@ -14,7 +10,7 @@ const offerSchema = new Schema(
     },
     createdAt: {
       type: Date,
-      default: Date.now,
+      default: new Date(),
     },
     senderId: {
       type: Schema.Types.ObjectId,
@@ -26,7 +22,6 @@ const offerSchema = new Schema(
     },
     Reply: {
       type: String,
-      default:"Typing........"
     },
    status:{
      type:String,
